@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
+import useToken from '../../../hooks/useToken';
 
 const Login = () => {
     const emailRef = useRef('');
@@ -28,17 +29,15 @@ const Login = () => {
     ] = useSignInWithEmailAndPassword(auth);
     const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
 
+    const [token] = useToken(user);
+
 
     const handleSubmit = async event =>{
         event.preventDefault();
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
 
-        await signInWithEmailAndPassword(email, password);
-
-        const { data } = await axios.post('http://localhost:5000/login', {email});
-        localStorage.setItem('accessToken', data.accessToken);
-        navigate(from, { replace: true });
+        await signInWithEmailAndPassword(email, password);   
         
     }
     const navigateRegister = event =>{
@@ -56,10 +55,10 @@ const Login = () => {
     };
     
     useEffect(() => {
-        if (user) {
-           // navigate(from, {replace: true});
+        if (token) {
+            navigate(from, { replace: true });
         }
-    }, [user, navigate, from]);
+    }, [token, navigate, from]);
 
     if (loading || sending) {
         return <Loading></Loading>

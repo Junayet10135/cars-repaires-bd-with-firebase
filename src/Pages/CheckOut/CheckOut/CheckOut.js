@@ -20,7 +20,7 @@ const CheckOut = () => {
             phone: event.target.phone.value
         }
         //console.log(order);
-        axios.post('http://localhost:5000/order', order)
+        axios.post('https://peaceful-reaches-09947.herokuapp.com/order', order)
             .then(response => {
                 const { data } = response;
                 if (data.insertedId) {

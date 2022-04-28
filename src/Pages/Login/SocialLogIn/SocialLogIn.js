@@ -6,10 +6,12 @@ import { useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/a
 import auth from '../../../firebase.init';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '../../Shared/Loading/Loading';
+import useToken from '../../../hooks/useToken';
 
 const SocialLogIn = () => {
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
     const [signInWithGithub, user1, loading1, error1] = useSignInWithGithub(auth);
+    const [token] = useToken(user || user1);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -18,10 +20,10 @@ const SocialLogIn = () => {
 
     const from = location?.state?.from?.pathname || '/';
     useEffect(() => {
-        if (user || user1) {
+        if (token) {
             navigate(from, { replace: true });
         }
-    }, [user, user1, navigate, from]);
+    }, [token, navigate, from]);
 
     if(loading || loading1){
         return <Loading></Loading>
